@@ -10,16 +10,25 @@ spiders = glob.glob('./Spider/*')
 non_spiders = glob.glob('./NonSpider/*')
 
 SPimg = []
+px = 20
+py = 10
 for sp in spiders:
-    img = Image.open(sp)
-    resized = scipy. misc.imresize(img,[100,100])
-    SPimg.append(resized)
+    img = Image.open(sp).convert('L')
+    width,height = img.size
+    if((width>=px) and (height>=py)):
+        resized = scipy.misc.imresize(img,[px,py])
+        SPimg.append(resized)
+    else:
+        print sp
 
 NSPimg = []
 for sp in non_spiders:
-    img = Image.open(sp)
-    resized = scipy.misc.imresize(img,[100,100])
-    NSPimg.append(resized)
+    img = Image.open(sp).convert('L')
+    if((width>=px) and (height>=py)):
+        resized = scipy.misc.imresize(img,[px,py])
+        NSPimg.append(resized)
+    else:
+        print sp
 
 testSize = int(0.75*len(SPimg)) + int(0.75*len(NSPimg))
 trainSpid = int(0.75*len(SPimg))
@@ -36,30 +45,42 @@ for i in range(0,trainSpid):
 testImgs[trainSpid:testSize-1] = SPimg[0:trainNSpid]
 # toAloc = -1*np.ones(trainNSpid)
 
-for i in range(trainSpid,testSize):
-    testLabs[i] = -1
+# for i in range(trainSpid,testSize):
+    # testLabs[i] = -1
 
 testImgsA = np.array(testImgs)
 TwoDim_dataset = testImgsA.reshape(testSize,-1)
 
-#Now for a single layer perceptron with 3 nodes in the hidden layer
-SLPClass = MLPClassifier(hidden_layer_sizes=(1,))
-SLPClass.fit(TwoDim_dataset,testLabs)
 
-print SLPClass.loss_
-testSP = SPimg[215:230]
-testSPA = np.array(testSP,ndmin=4) #.tolist()
-# testSP = np.array(testSP)
-TwoDtestSP = testSPA.reshape(15,-1)
-# TwoDtestSP = TwoDtestSP.reshape(int(0.75*len(SPimg)),-1)
-# testSPLabs = np.ones(np.shape(TwoDtestSP)[0])
-checkSpidOnes = np.ones(15)
-testSLPSPScore = SLPClass.score(TwoDtestSP,checkSpidOnes)
-# testSLPSPScore = SLPClass.score(TwoDim_dataset,testLabs)
-print "Testing the SLP on spiders " , testSLPSPScore
-#
-testNSP = NSPimg[10:20]
-TwoDtestNSP = np.array(testNSP).reshape(20,-1)
-#
-testNSLPSPScore = SLPClass.score(testNSP,np.ones(20))
-print "Testing the SLP on non-spiders " , testNSLPSPScore
+
+        #Now for a single layer perceptron with 3 nodes in the hidden layer
+        SLPClass = MLPClassifier(hidden_layer_sizes=(2*px*py,0.5*px*py,0.25*px*py))
+        SLPClass.fit(TwoDim_dataset,testLabs)
+
+        print SLPClass.loss_
+        # toAdd = 23
+        testSP = SPimg[trainSpid+1:]
+        # print spiders[215+toAdd]
+        testSPA = np.array(testSP) #.tolist()
+        # testSP = np.array(testSP)
+        TwoDtestSP = testSPA.reshape(checkSpid,-1)
+        # TwoDtestSP = TwoDtestSP.reshape(int(0.75*len(SPimg)),-1)
+        # testSPLabs = np.ones(np.shape(TwoDtestSP)[0])
+        checkSpidOnes = np.ones(checkSpid)
+        testSLPSPScore = SLPClass.score(TwoDtestSP,checkSpidOnes)
+        # testSLPSPScore = SLPClass.score(TwoDim_dataset,testLabs)
+        print "Testing the SLP on spiders " , testSLPSPScore
+        #
+        testNSP = NSPimg[trainNSpid+1:]
+        TwoDtestNSP = np.array(testNSP).reshape(checkNSpid,-1)
+
+        # minusOnes = []
+        # minusOnes= np.zeros(checkNSpid)#-np.ones(checkNSpid);
+        #
+        # for i in range(0,checkNSpid):
+        #     minusOnes[i] = -1
+
+        # minusOnes = np.array(minusOnes)
+        #
+        testNSLPSPScore = SLPClass.score(TwoDtestNSP,np.zeros(checkNSpid))
+        print "Testing the SLP on non-spiders " , testNSLPSPScore
