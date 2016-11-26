@@ -22,6 +22,8 @@ for sp in non_spiders:
     NSPimg.append(resized)
 
 testSize = int(0.75*len(SPimg)) + int(0.75*len(NSPimg))
+checkSpid = int(0.25*len(SPimg))
+checkNSpid = int(0.25*len(NSPimg))
 testLabs = np.zeros(testSize)
 
 testImgs = SPimg[0:int(0.75*len(SPimg))]
@@ -43,10 +45,12 @@ SLPClass = MLPClassifier(hidden_layer_sizes=(3,))
 SLPClass.fit(TwoDim_dataset,testLabs)
 
 print SLPClass.loss_
-# testSP = SPimg[(int)(0.75*len(SPimg))+1:-1]
-# testSLPSPScore = SLPClass.score(testSP,np.ones(len(testSP)))
-# print "Testing the SLP on spiders " , testSLPSPScore
+testSP = np.array(SPimg[(int)(0.75*len(SPimg))+1:-1])
+testSP = testSP.reshape(checkSpid,-1)
+testSLPSPScore = SLPClass.score(testSP,np.ones(len(testSP)))
+print "Testing the SLP on spiders " , testSLPSPScore
 #
 # testNSP = NSPimg[(int)(0.75*len(NSPimg))+1:-1]
-# testNSLPSPScore = SLPClass.score(testNSP,np.ones(len(testNSP)))
+#
+# # testNSLPSPScore = SLPClass.score(testNSP,np.ones(len(testNSP)))
 # print "Testing the SLP on non-spiders " , testNSLPSPScore
