@@ -47,18 +47,19 @@ SLPClass = MLPClassifier(hidden_layer_sizes=(1,))
 SLPClass.fit(TwoDim_dataset,testLabs)
 
 print SLPClass.loss_
-testSP = SPimg[trainSpid:]
+testSP = SPimg[215:230]
 testSPA = np.array(testSP,ndmin=4) #.tolist()
 # testSP = np.array(testSP)
-TwoDtestSP = testSPA.reshape(checkSpid,-1)
+TwoDtestSP = testSPA.reshape(15,-1)
 # TwoDtestSP = TwoDtestSP.reshape(int(0.75*len(SPimg)),-1)
 # testSPLabs = np.ones(np.shape(TwoDtestSP)[0])
-checkSpidOnes = np.ones(checkSpid)
+checkSpidOnes = np.ones(15)
 testSLPSPScore = SLPClass.score(TwoDtestSP,checkSpidOnes)
 # testSLPSPScore = SLPClass.score(TwoDim_dataset,testLabs)
 print "Testing the SLP on spiders " , testSLPSPScore
 #
-# testNSP = NSPimg[(int)(0.75*len(NSPimg))+1:-1]
+testNSP = NSPimg[10:20]
+TwoDtestNSP = np.array(testNSP).reshape(20,-1)
 #
-# # testNSLPSPScore = SLPClass.score(testNSP,np.ones(len(testNSP)))
-# print "Testing the SLP on non-spiders " , testNSLPSPScore
+testNSLPSPScore = SLPClass.score(testNSP,np.ones(20))
+print "Testing the SLP on non-spiders " , testNSLPSPScore
