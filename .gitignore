@@ -5,3 +5,5 @@ Edited*
 *.xml
 
 .idea/SpIdentify.iml
+
+*-checkpoint.ipynb
