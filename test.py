@@ -29,10 +29,12 @@ tempImg = urllib.request.urlretrieve(link,'temp.jpg')
 
 output = IsSpider.isSpider('./temp.jpg') ###############################################################<<<-------- result of program
 
-if output:
+if output==1:
 	text = 'Beware! There is a spider in the picture.'
+elif output ==0:
+    text = "No need to worry! There isn't a spider in the picture."
 else:
-	text = "No need to worry! There isn't a spider in the picture."
+	test = "Issue with the image/url"
 
 tag.string = text
 print(link)
