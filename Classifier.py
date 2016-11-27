@@ -63,9 +63,9 @@ def worker(x,result_array):
     print 'worker x = ',x
     # result_array = []
 
-    for y in range(10, 501, 100):
+    for y in range(10, int(2*x), 100):
         print 'x,y',x,' ',y
-        for z in range(10, 501, 100):
+        for z in range(10, int(.5*y), 100):
             # print
             # print "x = ",x," y = ",y," z = ",z
             # print
@@ -113,7 +113,7 @@ total_threads = 0
 if __name__ == '__main__':
 
 
-    for x in range(10, 501, 50):
+    for x in range(10, 201, 50):
         total_threads += 1
         print "x = ", x
 
