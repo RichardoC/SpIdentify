@@ -39,4 +39,4 @@ def isSpider(location):
 
     return int(isSpid)
 
-print isSpider("./EditedOutlineImages/NonSpider/1.jpg")
+# print isSpider("./EditedOutlineImages/NonSpider/1.jpg")

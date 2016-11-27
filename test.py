@@ -14,7 +14,10 @@ page = open(url)
 soup = BeautifulSoup(page.read(), 'html.parser')
 tag = soup.p
 
-
+# tempImg = urllib.request.urlretrieve(link,'temp.jpg')
+# tempImg = testfile.retrieve('http://www.telegraph.co.uk/content/dam/news/2016/04/27/BMMPYM-redback-large_trans++eo_i_u9APj8RuoebjoAHt0k9u7HhRJvuo-ZLenGRumA.jpg','temp.jpg')
+# output = IsSpider.isSpider('./temp.jpg') ###############################################################<<<-------- result of program
+# print output
 # output = soup.find_all('p')
 # print(soup.prettify())
 
