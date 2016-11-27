@@ -1,9 +1,16 @@
 from PIL import Image
 import os
 
-for fileName in os.listdir('Spider') :
-    image = Image.open("Spider/"+fileName)
+folderName = "Spider"
+thresholdLow = 150
+thresholdHigh = 255
+
+if (not os.path.isdir('Edited' + folderName)) :
+	os.makedirs('Edited' + folderName)
+
+for fileName in os.listdir( folderName) :
+    image = Image.open(folderName + "/"+fileName)
     mask=image.convert("L")
     
-    mask = mask.point(lambda i: i < 150 and 255)
-    mask.save("Spider/"+fileName+"Edited.jpg")
+    mask = mask.point(lambda i: i < thresholdLow and thresholdHigh)
+    mask.save("Edited" + folderName +"/"+fileName)
