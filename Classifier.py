@@ -8,8 +8,10 @@ from sklearn.neural_network import MLPClassifier
 
 import multiprocessing  # for the multithreading
 
-spiders = glob.glob('./Spider/*')
-non_spiders = glob.glob('./NonSpider/*')
+# spiders = glob.glob('./Spider/*')
+# non_spiders = glob.glob('./NonSpider/*')
+spiders = glob.glob('./EditedSpider/*')
+non_spiders = glob.glob('./EditedNonSpider/*')
 
 SPimg = []
 px = 20
@@ -58,14 +60,22 @@ TwoDim_dataset = testImgsA.reshape(testSize, -1)
 #     print "x = ",x
 
 
-def worker(x,result_array):
+def worker(x,res_array):
     """thread worker function"""
     print 'worker x = ',x
-    # result_array = []
+    result_array = []
+    #TODO instead return values of best one, not all
+    maximum_ = -1
+    Max_testNSLPSPScore = 0
+    maximum_r = 1
+    Max_testSLPSPScore = 0
+    Max_x = 0
+    Max_y = 0
+    Max_z = 0
 
-    for y in range(10, 501, 100):
+    for y in range(10, int(1.5*x), 100):
         print 'x,y',x,' ',y
-        for z in range(10, 501, 100):
+        for z in range(10, int(.75*y), 100):
             # print
             # print "x = ",x," y = ",y," z = ",z
             # print
@@ -101,7 +111,18 @@ def worker(x,result_array):
             #
             testNSLPSPScore = SLPClass.score(TwoDtestNSP, np.zeros(checkNSpid))
             # print "Testing the SLP on non-spiders " , testNSLPSPScore
-            result_array.put([x, y, z, SLPClass.loss_, testSLPSPScore, testNSLPSPScore])
+
+            if (testNSLPSPScore + testSLPSPScore) > maximum_:
+                maximum_ = (testNSLPSPScore + testSLPSPScore)
+                maximum_r = SLPClass
+                Max_testNSLPSPScore = testNSLPSPScore
+                Max_testSLPSPScore = testSLPSPScore
+                Max_x = x
+                Max_y = y
+                Max_z = z
+
+    result_array.append([[Max_x, Max_y, Max_z, maximum_r.loss_, Max_testSLPSPScore, Max_testNSLPSPScore],[maximum_r.coefs_],[maximum_r.intercepts_]])
+    res_array.put(result_array)
 
 
     # return result_array
@@ -113,7 +134,7 @@ total_threads = 0
 if __name__ == '__main__':
 
 
-    for x in range(10, 501, 50):
+    for x in range(49, 151, 50):
         total_threads += 1
         print "x = ", x
 
@@ -123,8 +144,7 @@ if __name__ == '__main__':
 print "started all"
 result = []
 
-for i in range(total_threads):
-    result.append(out_q.get())
+
 
 
 # Wait for all worker processes to finish
@@ -132,18 +152,23 @@ for p in procs:
     print 'waiting on process'
     p.join()
 
+for i in range(total_threads):
+    result.append(out_q.get())
+
 print result
 
 
 maximum_ = -1
 maximum_result = []
+
 for resArray in result:
     print "resArray ", resArray
-    # for res in resArray:
-    # print "res",resArray
-    if (resArray[-1] +resArray[-2])> maximum_:
-        maximum_ = (resArray[-1] + resArray[-2])
-        maximum_result = resArray
+    for i in range(0,len(resArray[0])):
+        res = resArray[0][i]
+        print "res",res
+        if (res[-1] +res[-2])> maximum_:
+            maximum_ = (res[-1] + res[-2])
+            maximum_result = res
 
 print maximum_
 print maximum_result
