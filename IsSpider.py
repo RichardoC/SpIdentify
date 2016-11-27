@@ -38,5 +38,6 @@ def isSpider(location):
     isSpid = SLPClass.predict(Array)
 
     return int(isSpid)
-
-# print isSpider("./EditedOutlineImages/NonSpider/1.jpg")
+print "1 = spider, 0 = non spider"
+print "testing on a non spider image",isSpider("./EditedOutlineImages/NonSpider/1.jpg")
+print "testing on a spider image ",isSpider("./EditedOutlineImages/Spider/_86087350_028938243-1.jpg")
