@@ -10,8 +10,11 @@ for folderName in folderNames :
 		os.makedirs('Edited' + folderName)
 
 	for fileName in os.listdir( folderName) :
-		image = Image.open(folderName + "/"+fileName)
-		mask=image.convert("L")
+		try:
+			image = Image.open(folderName + "/"+fileName)
+			mask=image.convert("L")
 
-		mask = mask.point(lambda i: i < thresholdLow and thresholdHigh)
-		mask.save("Edited" + folderName +"/"+fileName)
+			mask = mask.point(lambda i: i < thresholdLow and thresholdHigh)
+			mask.save("Edited" + folderName +"/"+fileName)
+		except:
+			print "fucked",fileName
