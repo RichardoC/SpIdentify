@@ -6,3 +6,5 @@
 .idea/SpIdentify.iml
 
 *-checkpoint.ipynb
+
+*.pyc
