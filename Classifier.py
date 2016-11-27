@@ -146,7 +146,7 @@ while((testSLPSPScore+testNSLPSPScore)<1.6) and i<1000:
 with open('SLPClass.pkl', 'wb') as output:
             # company1 = Company('banana', 40)
             pickle.dump(SLPClass, output, pickle.HIGHEST_PROTOCOL)
-
+SLPClass.predict()
 # print SLPClass.coefs_
 # print
 # print SLPClass.intercepts_

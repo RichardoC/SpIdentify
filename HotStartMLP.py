@@ -130,6 +130,7 @@ TwoDtestNSP = np.array(testNSP).reshape(checkNSpid, -1)
 with open('SLPClass.pkl', 'rb') as input:
     SLPClass = pickle.load(input)
 
+
 # print SLPClass.coefs_
 # print SLPClass.intercepts_
 # i = 0
