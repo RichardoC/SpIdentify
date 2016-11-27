@@ -8,14 +8,16 @@ from sklearn.neural_network import MLPClassifier
 
 import multiprocessing  # for the multithreading
 
-spiders = glob.glob('./EditedSpider/*')
-more = glob.glob('./EditedBigSpiders/*')
+spiders = glob.glob('./EditedOutlineImages/Spider/*')
+more = glob.glob('./EditedOutlineImages/BigSpiders/*')
 spiders[len(spiders):len(spiders)+len(more)] = more
 # spiders.append(glob.glob('./Editedtopdown/*'))
-more = glob.glob('./Editedtopdown/*')
+more = glob.glob('./EditedOutlineImages/topdown/*')
 spiders[len(spiders):len(spiders)+len(more)] = more
 
-non_spiders = glob.glob('./EditedNonSpider/*')
+non_spiders = glob.glob('./EditedOutlineImages/NonSpider/*')
+# more = glob.glob('./EditedOutlineImages/Memes/*')
+# non_spiders[len(non_spiders):len(non_spiders)+len(more)] = more
 
 SPimg = []
 px = 20
