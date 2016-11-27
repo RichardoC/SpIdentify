@@ -1,15 +1,15 @@
 from PIL import Image
 import os
 
-folderNames = {"Spider", "NonSpider", "BigSpiders", "topdown"}
+folderNames = {"EditedImages/Spider", "EditedImages/NonSpider", "EditedImages/BigSpiders", "EditedImages/topdown", "EditedImages/Memes"}
 thresholdLow = 150
 thresholdHigh = 255
 
 for folderName in folderNames :
-	if (not os.path.isdir('Edited' + folderName)) :
+	if (not os.path.isdir('EditedProcessedImages/' + folderName)) :
 		os.makedirs('Edited' + folderName)
 
-	for fileName in os.listdir( folderName) :
+	for fileName in os.listdir(folderName) :
 		try:
 			image = Image.open(folderName + "/"+fileName)
 			mask=image.convert("L")

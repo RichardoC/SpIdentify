@@ -1,9 +1,10 @@
 from PIL import Image
 import os
+import numpy as np
 import matplotlib.pyplot as plt
-%matplotlib inline
+# %matplotlib inline
 
-folderNames = {"Spider", "NonSpider", "BigSpiders", "topdown"}
+folderNames = {"Images/Spider", "Images/NonSpider", "Images/BigSpiders", "Images/topdown", "Images/Memes"}
 thresholdLow = 150
 thresholdHigh = 255
 
