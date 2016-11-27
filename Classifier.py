@@ -125,8 +125,8 @@ for i in range(0,4):
     interFN = baseFN+ '-_intercepts.txt'
     coefFN = baseFN + '-_coeffs.txt'
 
-np.savetxt(interFN,SLPClass.intercepts_[i])#,fmt='%.15f')
-np.savetxt(coefFN,SLPClass.coefs_[i])#,fmt='%.15f')
+    np.savetxt(interFN,SLPClass.intercepts_[i])#,fmt='%.15f')
+    np.savetxt(coefFN,SLPClass.coefs_[i])#,fmt='%.15f')
 
 
 # print SLPClass.coefs_

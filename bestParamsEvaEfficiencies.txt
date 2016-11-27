@@ -1,0 +1,2 @@
+test Spiders, test Non spiders
+0.613636363636 1.0
