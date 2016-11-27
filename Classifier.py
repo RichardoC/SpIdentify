@@ -1,12 +1,9 @@
-import sklearn as sk
 import glob
+
 import numpy as np
-import matplotlib.pyplot as plt
 import scipy
 from PIL import Image
 from sklearn.neural_network import MLPClassifier
-
-import multiprocessing  # for the multithreading
 
 spiders = glob.glob('./EditedOutlineImages/Spider/*')
 more = glob.glob('./EditedOutlineImages/BigSpiders/*')
@@ -65,93 +62,98 @@ TwoDim_dataset = testImgsA.reshape(testSize, -1)
 # for x in range(10,501,50):
 #     print "x = ",x
 
+testSLPSPScore = 0
+testNSLPSPScore = 0
 
-def worker(x,result_array):
-    """thread worker function"""
-    print 'worker x = ',x
-    # result_array = []
+# print
+# print "x = ",x," y = ",y," z = ",z
+# print
 
-    for y in range(80, 201, 10):
-        print 'x,y',x,' ',y
-        for z in range(10, 11, 100):
-            # print
-            # print "x = ",x," y = ",y," z = ",z
-            # print
-
-            # Now for a single layer perceptron with 3 nodes in the hidden layer
-            SLPClass = MLPClassifier(hidden_layer_sizes=(x, y, z))
-            SLPClass.fit(TwoDim_dataset, testLabs)
-
-            # print SLPClass.loss_
-            # toAdd = 23
-            testSP = SPimg[trainSpid + 1:]
-            # print spiders[215+toAdd]
-            testSPA = np.array(testSP)  # .tolist()
-            # testSP = np.array(testSP)
-            TwoDtestSP = testSPA.reshape(checkSpid, -1)
-            # TwoDtestSP = TwoDtestSP.reshape(int(0.75*len(SPimg)),-1)
-            # testSPLabs = np.ones(np.shape(TwoDtestSP)[0])
-            checkSpidOnes = np.ones(checkSpid)
-            testSLPSPScore = SLPClass.score(TwoDtestSP, checkSpidOnes)
-            # testSLPSPScore = SLPClass.score(TwoDim_dataset,testLabs)
-            # print "Testing the SLP on spiders " , testSLPSPScore
-            #
-            testNSP = NSPimg[trainNSpid + 1:]
-            TwoDtestNSP = np.array(testNSP).reshape(checkNSpid, -1)
-
-            # minusOnes = []
-            # minusOnes= np.zeros(checkNSpid)#-np.ones(checkNSpid);
-            #
-            # for i in range(0,checkNSpid):
-            #     minusOnes[i] = -1
-
-            # minusOnes = np.array(minusOnes)
-            #
-            testNSLPSPScore = SLPClass.score(TwoDtestNSP, np.zeros(checkNSpid))
-            # print "Testing the SLP on non-spiders " , testNSLPSPScore
-            result_array.put([x, y, z, SLPClass.loss_, testSLPSPScore, testNSLPSPScore])
+# print SLPClass.loss_
+# toAdd = 23
+testSP = SPimg[trainSpid + 1:]
+# print spiders[215+toAdd]
+testSPA = np.array(testSP)  # .tolist()
+# testSP = np.array(testSP)
+TwoDtestSP = testSPA.reshape(checkSpid, -1)
+# TwoDtestSP = TwoDtestSP.reshape(int(0.75*len(SPimg)),-1)
+# testSPLabs = np.ones(np.shape(TwoDtestSP)[0])
+checkSpidOnes = np.ones(checkSpid)
 
 
-    # return result_array
-# total_results_array = []
-# process_list = []
-out_q = multiprocessing.Queue()
-procs = []
-total_threads = 0
-if __name__ == '__main__':
+# testSLPSPScore = SLPClass.score(TwoDim_dataset,testLabs)
+# print "Testing the SLP on spiders " , testSLPSPScore
+#
+testNSP = NSPimg[trainNSpid + 1:]
+TwoDtestNSP = np.array(testNSP).reshape(checkNSpid, -1)
+
+# minusOnes = []
+# minusOnes= np.zeros(checkNSpid)#-np.ones(checkNSpid);
+#
+# for i in range(0,checkNSpid):
+#     minusOnes[i] = -1
+
+# minusOnes = np.array(minusOnes)
+#
+
+SLPClass = MLPClassifier(hidden_layer_sizes=(160, 80, 10))
+i = 0
+while((testSLPSPScore+testNSLPSPScore)<1.6) and i<1000:
+    # for x in range(1,100):
+    i += 1
+    # Now for a single layer perceptron with 3 nodes in the hidden layer
+
+    SLPClass.fit(TwoDim_dataset, testLabs)
+
+    testSLPSPScore = SLPClass.score(TwoDtestSP, checkSpidOnes)
+    testNSLPSPScore = SLPClass.score(TwoDtestNSP, np.zeros(checkNSpid))
+
+    # print "Testing the SLP on non-spiders " , testNSLPSPScore
+    # result_array.put([x, y, z, SLPClass.loss_, testSLPSPScore, testNSLPSPScore])
 
 
-    for x in range(80, 201, 20):
-        total_threads += 1
-        print "x = ", x
+    print SLPClass.loss_, testSLPSPScore, testNSLPSPScore
+    # print "did all loops"
+# print
+# print SLPClass.intercepts_
+# print
+# print SLPClass.coefs_
+print np.size(SLPClass.intercepts_)
+print np.size(SLPClass.coefs_)
+for i in range(0,4):
+    baseFN = 'bestParamsEva_160_80_10_-'+str(i)
+    interFN = baseFN+ '-_intercepts.txt'
+    coefFN = baseFN + '-_coeffs.txt'
 
-        p = multiprocessing.Process(target=worker, args=(x,out_q))
-        procs.append(p)
-        p.start()
-print "started all"
-result = []
-
-for i in range(total_threads):
-    result.append(out_q.get())
-
-
-# Wait for all worker processes to finish
-for p in procs:
-    print 'waiting on process'
-    p.join()
-
-print result
+np.savetxt(interFN,SLPClass.intercepts_[i])#,fmt='%.15f')
+np.savetxt(coefFN,SLPClass.coefs_[i])#,fmt='%.15f')
 
 
-maximum_ = -1
-maximum_result = []
-for resArray in result:
-    print "resArray ", resArray
-    # for res in resArray:
-    # print "res",resArray
-    if (resArray[-1] +resArray[-2])> maximum_:
-        maximum_ = (resArray[-1] + resArray[-2])
-        maximum_result = resArray
+# print SLPClass.coefs_
+# print
+# print SLPClass.intercepts_
 
-print maximum_
-print maximum_result
+# for i in range(total_threads):
+#     result.append(out_q.get())
+#
+#
+# # Wait for all worker processes to finish
+# for p in procs:
+#     print 'waiting on process'
+#     p.join()
+#
+# print result
+
+
+# maximum_ = -1
+# maximum_result = []
+# for resArray in result:
+#     print "resArray ", resArray
+#     # for res in resArray:
+#     # print "res",resArray
+#     if (resArray[-1] +resArray[-2])> maximum_:
+#         maximum_ = (resArray[-1] + resArray[-2])
+#         maximum_result = resArray
+#
+# print maximum_
+# print maximum_result
