@@ -4,7 +4,10 @@ import numpy as np
 import scipy
 from PIL import Image
 from sklearn.neural_network import MLPClassifier
+import json
 import pickle
+
+from sklearn.preprocessing import LabelBinarizer
 
 spiders = glob.glob('./EditedOutlineImages/Spider/*')
 more = glob.glob('./EditedOutlineImages/BigSpiders/*')
@@ -97,39 +100,66 @@ TwoDtestNSP = np.array(testNSP).reshape(checkNSpid, -1)
 # minusOnes = np.array(minusOnes)
 #
 
-SLPClass = MLPClassifier(hidden_layer_sizes=(160, 80, 10))
-i = 0
-while((testSLPSPScore+testNSLPSPScore)<1.6) and i<1000:
-    # for x in range(1,100):
-    i += 1
-    # Now for a single layer perceptron with 3 nodes in the hidden layer
-
-    SLPClass.fit(TwoDim_dataset, testLabs)
-
-    testSLPSPScore = SLPClass.score(TwoDtestSP, checkSpidOnes)
-    testNSLPSPScore = SLPClass.score(TwoDtestNSP, np.zeros(checkNSpid))
-
-    # print "Testing the SLP on non-spiders " , testNSLPSPScore
-    # result_array.put([x, y, z, SLPClass.loss_, testSLPSPScore, testNSLPSPScore])
 
 
-    print SLPClass.loss_, testSLPSPScore, testNSLPSPScore
-    # print SLPClass.
+#####
+# Loading in the nice values
 
-    # print "did all loops"
-# # print
-# # print SLPClass.intercepts_
-# # print
+# coeffs = []
+# intercepts = []
+#
+# for i in range(0,4):
+#     baseFN = 'bestParamsEva_160_80_10_-' + str(i)
+#     interFN = baseFN + '-_intercepts.txt'
+#     coefFN = baseFN + '-_coeffs.txt'
+#     currentInter = np.loadtxt(interFN)
+#     currentCoef = np.loadtxt(coefFN)
+#     coeffs.append(currentCoef)
+#     intercepts.append(currentInter)
+#
+# with open('full.json', 'r') as fp:
+#     data = json.load(fp)
+#
+# SLPClass = MLPClassifier(hidden_layer_sizes=(160, 80, 10),activation='logistic')
+# # SLPClass.coefs_ = coeffs
+# # SLPClass.intercepts_ = intercepts
+# # SLPClass.classes_ = [float(0),float(1)]
+# print data["hidden_layer_sizes"]
+# print data
+# SLPClass.set_params(**data)
+with open('SLPClass.pkl', 'rb') as input:
+    SLPClass = pickle.load(input)
+
+# print SLPClass.coefs_
+# print SLPClass.intercepts_
+# i = 0
+
+# print SLPClass.classes_
+
+
+
+# while((testSLPSPScore+testNSLPSPScore)<1.6) and i<1000:
+# for x in range(1,100):
+# i += 1
+# Now for a single layer perceptron with 3 nodes in the hidden layer
+
+# SLPClass.fit(TwoDim_dataset, testLabs)
+
+testSLPSPScore = SLPClass.score(TwoDtestSP, checkSpidOnes)
+testNSLPSPScore = SLPClass.score(TwoDtestNSP, np.zeros(checkNSpid))
+
+# print "Testing the SLP on non-spiders " , testNSLPSPScore
+# result_array.put([x, y, z, SLPClass.loss_, testSLPSPScore, testNSLPSPScore])
+
+
+print SLPClass.loss_, testSLPSPScore, testNSLPSPScore
+# print "did all loops"
+# print
+# print SLPClass.intercepts_
+# print
 # # print SLPClass.coefs_
 # print np.size(SLPClass.intercepts_)
 # print np.size(SLPClass.coefs_)
-#
-#
-# print
-# print
-# print SLPClass.get_params(deep=True)
-# print
-# print
 # for i in range(0,4):
 #     baseFN = 'bestParamsEva_160_80_10_-'+str(i)
 #     interFN = baseFN+ '-_intercepts.txt'
@@ -137,15 +167,7 @@ while((testSLPSPScore+testNSLPSPScore)<1.6) and i<1000:
 #
 #     np.savetxt(interFN,SLPClass.intercepts_[i])#,fmt='%.15f')
 #     np.savetxt(coefFN,SLPClass.coefs_[i])#,fmt='%.15f')
-#
-# import json
-#
-# with open('full.json', 'w') as fp:
-#         json.dump(SLPClass.get_params(deep=True), fp)
 
-with open('SLPClass.pkl', 'wb') as output:
-            # company1 = Company('banana', 40)
-            pickle.dump(SLPClass, output, pickle.HIGHEST_PROTOCOL)
 
 # print SLPClass.coefs_
 # print
